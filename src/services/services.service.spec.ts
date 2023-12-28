@@ -1,17 +1,18 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CommonModule } from 'src/common/common.module';
-import { ServiceRequestRepository } from './service-request.repo';
+import { ServicesService } from './services.service';
+import { ServicesRepository } from './services.repo';
 
-describe('ServiceRequestRepository', () => {
-  let service: ServiceRequestRepository;
+describe('ServicesService', () => {
+  let service: ServicesService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [CommonModule],
-      providers: [ServiceRequestRepository],
+      providers: [ServicesService, ServicesRepository],
     }).compile();
 
-    service = module.get<ServiceRequestRepository>(ServiceRequestRepository);
+    service = module.get<ServicesService>(ServicesService);
   });
 
   it('should be defined', () => {

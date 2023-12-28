@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { CommonModule } from 'src/common/common.module';
 import { TelegramBotRepository } from './telegram-bot.repo';
 
 describe('TelegramBotService', () => {
@@ -7,7 +7,8 @@ describe('TelegramBotService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [TelegramBotRepository, PrismaService],
+      imports: [CommonModule],
+      providers: [TelegramBotRepository],
     }).compile();
 
     service = module.get<TelegramBotRepository>(TelegramBotRepository);

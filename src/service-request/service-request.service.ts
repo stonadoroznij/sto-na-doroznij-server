@@ -3,6 +3,8 @@ import { ServicesRepository } from 'src/services/services.repo';
 import { RequestMessage } from 'src/common';
 import { TelegrafService } from 'src/telegram-bot/telegraf.service';
 import { TelegramBotRepository } from 'src/telegram-bot/telegram-bot.repo';
+import { EmailService } from 'src/common/providers/email/email.service';
+import { Email } from 'src/i18n/uk';
 import { CreateServiceRequestDto } from './dto/create-service-request.dto';
 import { ServiceRequestRepository } from './service-request.repo';
 
@@ -15,6 +17,7 @@ export class ServiceRequestService {
     private servicesRepository: ServicesRepository,
     private telegrafService: TelegrafService,
     private telegramBotRepository: TelegramBotRepository,
+    private emailService: EmailService,
   ) {}
 
   async create(createServiceRequestDto: CreateServiceRequestDto) {
@@ -37,12 +40,11 @@ export class ServiceRequestService {
       await this.telegrafService.sendMessage(chatIdList, message.markdown());
     }
 
-    // TODO: add mail service
-    // mailer.sendMessageToAdmin({
-    //   subject: Email.newRequestSubject,
-    //   text: message.text(),
-    //   html: message.html(),
-    // });
+    this.emailService.sendMessageToAdmin({
+      subject: Email.newRequestSubject,
+      text: message.text(),
+      html: message.html(),
+    });
 
     return {};
   }
