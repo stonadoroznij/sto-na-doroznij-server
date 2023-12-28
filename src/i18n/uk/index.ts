@@ -1,1 +1,1 @@
-export * from './telegramBot';
+export * from './telegram-bot.strings';
