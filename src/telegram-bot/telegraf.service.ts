@@ -9,7 +9,7 @@ import { Telegraf } from 'telegraf';
 import { message } from 'telegraf/filters';
 import { ConfigService } from '@nestjs/config';
 import { TelegramBot } from 'src/i18n/uk';
-import { TelegramBotService } from 'src/telegram-bot/telegram-bot.service';
+import { TelegramBotRepository } from 'src/telegram-bot/telegram-bot.repo';
 
 @Injectable()
 export class TelegrafService
@@ -24,7 +24,7 @@ export class TelegrafService
 
   constructor(
     private configService: ConfigService,
-    private telegramBotService: TelegramBotService,
+    private telegramBotRepository: TelegramBotRepository,
   ) {}
 
   onApplicationBootstrap() {
@@ -72,7 +72,7 @@ export class TelegrafService
     bot.command('join', async (ctx) => {
       const { chat } = ctx.message;
       const chatId = chat.id.toString();
-      const isChatExist = await this.telegramBotService.getById(chatId);
+      const isChatExist = await this.telegramBotRepository.getById(chatId);
 
       if (isChatExist) {
         ctx.reply(TelegramBot.alreadySubscribed);
@@ -88,14 +88,14 @@ export class TelegrafService
 
     bot.command('leave', async (ctx) => {
       const chatId = ctx.message.chat.id.toString();
-      const isChatExist = await this.telegramBotService.getById(chatId);
+      const isChatExist = await this.telegramBotRepository.getById(chatId);
 
       if (!isChatExist) {
         ctx.reply(TelegramBot.notSubscribed);
         return;
       }
 
-      await this.telegramBotService.deleteById(chatId);
+      await this.telegramBotRepository.deleteById(chatId);
 
       ctx.reply(TelegramBot.unsubscribe);
     });
@@ -108,7 +108,7 @@ export class TelegrafService
       if (timingSafeEqual(Buffer.from(text), Buffer.from(password))) {
         const chatId = chat.id.toString();
 
-        await this.telegramBotService.add({
+        await this.telegramBotRepository.add({
           chatId: chatId,
         });
 
@@ -126,7 +126,7 @@ export class TelegrafService
       const chatId = my_chat_member.chat.id.toString();
 
       if (my_chat_member.new_chat_member.status === 'kicked') {
-        await this.telegramBotService.deleteById(chatId);
+        await this.telegramBotRepository.deleteById(chatId);
       }
     });
   }
@@ -139,10 +139,9 @@ export class TelegrafService
     this.logger.log('Telegram bot launched');
   }
 
-  public async sendMessage(text: string) {
+  public async sendMessage(chatIdList: string[], text: string) {
     try {
-      const chatList = await this.telegramBotService.getAll();
-      const chatIdList = chatList.map((item) => item.chatId);
+      this.logger.log('Sending messages to chats', chatIdList);
 
       return await Promise.allSettled(
         chatIdList.map((chatId) => {

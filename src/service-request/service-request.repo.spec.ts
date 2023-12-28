@@ -1,16 +1,16 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { TelegramBotService } from './telegram-bot.service';
+import { ServiceRequestRepository } from './service-request.repo';
 
-describe('TelegramBotService', () => {
-  let service: TelegramBotService;
+describe('ServiceRequestRepository', () => {
+  let service: ServiceRequestRepository;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [TelegramBotService, PrismaService],
+      providers: [PrismaService, ServiceRequestRepository],
     }).compile();
 
-    service = module.get<TelegramBotService>(TelegramBotService);
+    service = module.get<ServiceRequestRepository>(ServiceRequestRepository);
   });
 
   it('should be defined', () => {

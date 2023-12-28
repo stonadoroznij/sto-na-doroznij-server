@@ -1,4 +1,3 @@
 export * from './service';
-export * from './messageData';
-export * from './emailData';
-export * from './messageConfig';
+export * from './request-message.types';
+export * from './email.types';
