@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  next-app:
+    container_name: next-app
+    env_file:
+      - .env.production.local
+    build:
+      context: .
+      network: host
+      dockerfile: prod.Dockerfile
+      args:
+        ENV_VARIABLE: ${ENV_VARIABLE}
+        POSTGRES_PRISMA_URL: ${POSTGRES_PRISMA_URL}
+        NEXT_PUBLIC_ENV_VARIABLE: ${NEXT_PUBLIC_ENV_VARIABLE}
+    restart: always
+    ports:
+      - 3000:3000  
+    networks:
+      - my_network
+    
+  # Add more containers below (nginx, postgres, etc.)
+
+  postgres:
+    container_name: postgres
+    image: postgres
+    restart: always
+    command: ['postgres', '-c', 'log_statement=all']
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: sto-na-doroznij
+    ports:
+      - '5433:5432'
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - my_network
+
+# Define a network, which allows containers to communicate
+# with each other, by using their container name as a hostname
+
+  nest-server:
+    container_name: nest-server
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - 3001:3001
+    networks:
+      - my_network
+
+
+networks:
+  my_network:
+
+volumes:
+  postgres-data:
