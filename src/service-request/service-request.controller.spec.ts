@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ServicesModule } from 'src/services/services.module';
-import { PrismaService } from 'src/prisma/prisma.service';
 import { TelegramBotModule } from 'src/telegram-bot/telegram-bot.module';
+import { CommonModule } from 'src/common/common.module';
 import { ServiceRequestController } from './service-request.controller';
 import { ServiceRequestService } from './service-request.service';
 import { ServiceRequestRepository } from './service-request.repo';
@@ -11,13 +11,9 @@ describe('ServiceRequestController', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [ServicesModule, TelegramBotModule],
+      imports: [CommonModule, ServicesModule, TelegramBotModule],
       controllers: [ServiceRequestController],
-      providers: [
-        PrismaService,
-        ServiceRequestService,
-        ServiceRequestRepository,
-      ],
+      providers: [ServiceRequestService, ServiceRequestRepository],
     }).compile();
 
     controller = module.get<ServiceRequestController>(ServiceRequestController);
