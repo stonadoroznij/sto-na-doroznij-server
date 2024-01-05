@@ -6,7 +6,7 @@ services:
     env_file:
       - .env.production.local
     build:
-      context: .
+      context: ../next-app
       network: host
       dockerfile: prod.Dockerfile
       args:
