@@ -2,7 +2,7 @@ name: CI/CD Workflow
 on:
   push:
     branches:
-      - main
+      - fix-actions
 
 jobs:
   deploy:
@@ -19,6 +19,7 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             cd /srv/sto/server
+            ls
             git checkout main
             git pull origin main
             docker compose up --build -d nest-server
