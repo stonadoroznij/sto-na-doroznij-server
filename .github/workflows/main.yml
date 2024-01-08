@@ -19,7 +19,6 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             cd /srv/sto/server
-            ls
             git checkout main
             git pull origin main
             docker compose up --build -d nest-server
